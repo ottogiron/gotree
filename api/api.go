@@ -12,23 +12,19 @@ const (
 	FLOAT
 )
 
-type ContentRepository interface {
-	Login(credentials Credentials) (ContentSession, error)
+type Repository interface {
+	Login() (Session, error)
 }
 
-type Credentials interface {
-	Password() string
-}
-
-type ContentSession interface {
+type Session interface {
 	io.Closer
-	GetLatestRoot() (Root, error)
+	Root() (Root, error)
 }
 
 type Root interface {
 	Move(sourcePath, destPath string) error
-	GetTree(path string) (Tree, error)
-	ContentSession() (ContentSession, error)
+	Tree(path string) (Tree, error)
+	Session() (Session, error)
 }
 
 type Tree interface {
