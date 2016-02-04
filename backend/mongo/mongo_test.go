@@ -8,11 +8,7 @@ import (
 
 func TestGetTree(t *testing.T) {
 
-	mongoBackend, err := New()
-
-	if err != nil || mongoBackend == nil {
-		t.Fatal("Error when connecting to the mongo database")
-	}
+	mongoBackend := New("localhost")
 
 	repository, err := gotree.CreateRepository(mongoBackend)
 
@@ -25,6 +21,7 @@ func TestGetTree(t *testing.T) {
 	if err != nil && session == nil {
 		t.Fatal("Could not create a session")
 	}
+	session.Close()
 
 	root, err := session.Root()
 
