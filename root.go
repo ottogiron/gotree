@@ -1,8 +1,12 @@
 package gotree
 
-import "github.com/ottogiron/gotree/api"
+import (
+	"github.com/ottogiron/gotree/api"
+	"github.com/ottogiron/gotree/backend/model"
+)
 
 type Root struct {
+	backend api.Backend
 }
 
 func (r *Root) Move(sourcePath, destPath string) error {
@@ -14,5 +18,6 @@ func (r *Root) Session() (api.Session, error) {
 }
 
 func (r *Root) Tree(path string) (api.Tree, error) {
-	return nil, nil
+	treeModel := &model.Tree{Name: "root", Path: "/"}
+	return &Tree{treeModel}, nil
 }

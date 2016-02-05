@@ -11,5 +11,5 @@ func (s *Session) Close() error {
 }
 
 func (s *Session) Root() (api.Root, error) {
-	return &Root{}, nil
+	return &Root{s.backend}, nil
 }

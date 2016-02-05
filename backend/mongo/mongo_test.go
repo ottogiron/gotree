@@ -35,7 +35,7 @@ func TestGetTree(t *testing.T) {
 
 	root, err := session.Root()
 
-	if err != nil || root == nil {
+	if err != nil {
 		t.Fatal("Could not get the root of the repository")
 	}
 

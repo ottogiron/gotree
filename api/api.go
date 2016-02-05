@@ -29,12 +29,12 @@ type Root interface {
 
 type Tree interface {
 	Name() string
-	isRoot() bool
+	IsRoot() bool
 	Path() string
 	Exists() bool
 	Parent() Tree
 	Property() Property
-	HasProperty(name string)
+	HasProperty(name string) bool
 	PropertyCount() int
 	Properties() Properties
 	Child(name string) error
