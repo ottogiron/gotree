@@ -7,6 +7,7 @@ import (
 
 type Tree struct {
 	*model.Tree
+	backend api.Backend
 }
 
 func (t *Tree) Name() string {
@@ -14,7 +15,7 @@ func (t *Tree) Name() string {
 }
 
 func (t *Tree) IsRoot() bool {
-	return false
+	return t.Path() == "/"
 }
 
 func (t *Tree) Path() string {

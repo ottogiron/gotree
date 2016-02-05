@@ -18,6 +18,9 @@ func (r *Root) Session() (api.Session, error) {
 }
 
 func (r *Root) Tree(path string) (api.Tree, error) {
-	treeModel := &model.Tree{Name: "root", Path: "/"}
-	return &Tree{treeModel}, nil
+	if path == "/" {
+		treeModel := &model.Tree{Name: "root", Path: "/"}
+		return &Tree{treeModel, r.backend}, nil
+	}
+	return r.backend.Tree(path)
 }
