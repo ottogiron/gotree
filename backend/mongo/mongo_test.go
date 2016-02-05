@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/ottogiron/gotree"
+	"github.com/ottogiron/gotree/api"
 )
 
-func TestGetTree(t *testing.T) {
-
+func createSession(t *testing.T) (api.Session, error) {
 	hosts := os.Getenv("MONGO_TEST_HOSTS")
 	mongoBackend := New(hosts)
+
 	repository, err := gotree.CreateRepository(mongoBackend)
 
 	if err != nil || repository == nil {
@@ -18,6 +19,13 @@ func TestGetTree(t *testing.T) {
 	}
 
 	session, err := repository.Login()
+	return session, err
+}
+
+func TestGetTree(t *testing.T) {
+	t.Parallel()
+
+	session, err := createSession(t)
 
 	if err != nil {
 		t.Fatal("Could not create a session")
