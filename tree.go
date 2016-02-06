@@ -3,90 +3,90 @@ package gotree
 import (
 	"github.com/ottogiron/gotree/api"
 	"github.com/ottogiron/gotree/api/backend"
-	"github.com/ottogiron/gotree/backend/model"
+	"github.com/ottogiron/gotree/api/backend/model"
 )
 
-type Tree struct {
+type tree struct {
 	*model.Tree
 	backend backend.B
 }
 
-func NewTree(model *model.Tree, backend backend.B) *Tree {
-	return &Tree{model, backend}
+func NewTree(model *model.Tree, backend backend.B) api.Tree {
+	return &tree{model, backend}
 }
 
-func (t *Tree) Name() string {
+func (t *tree) Name() string {
 	return t.Tree.Name
 }
 
-func (t *Tree) IsRoot() bool {
+func (t *tree) IsRoot() bool {
 	return t.Path() == "/"
 }
 
-func (t *Tree) Path() string {
+func (t *tree) Path() string {
 	return t.Tree.Path
 }
 
-func (t *Tree) Exists() bool {
+func (t *tree) Exists() bool {
 	return t.Tree.Exists
 }
 
-func (t *Tree) Parent() api.Tree {
+func (t *tree) Parent() api.Tree {
 	return nil
 }
 
-func (t *Tree) Property() api.Property {
+func (t *tree) Property() api.Property {
 	return nil
 }
 
-func (t *Tree) HasProperty(name string) bool {
+func (t *tree) HasProperty(name string) bool {
 	return false
 }
 
-func (t *Tree) PropertyCount() int {
+func (t *tree) PropertyCount() int {
 	return -1
 }
 
-func (t *Tree) Properties() api.Properties {
+func (t *tree) Properties() api.Properties {
 	return nil
 }
 
-func (t *Tree) Child(name string) error {
+func (t *tree) Child(name string) error {
 	return nil
 }
 
-func (t *Tree) HasChild(name string) bool {
+func (t *tree) HasChild(name string) bool {
 	return false
 }
 
-func (t *Tree) ChildrenCount() int {
+func (t *tree) ChildrenCount() int {
 	return -1
 }
 
-func (t *Tree) Children() []api.Tree {
+func (t *tree) Children() []api.Tree {
 	return nil
 }
 
-func (t *Tree) Remove() error {
+func (t *tree) Remove() error {
 	return nil
 }
 
-func (t *Tree) AddChild(name string) api.Tree {
+func (t *tree) AddChild(name string) api.Tree {
 	return nil
 }
 
-func (t *Tree) SetOrderableChildren(enable bool) {
+func (t *tree) SetOrderableChildren(enable bool) {
 
 }
 
-func (t *Tree) SetProperty(property api.Property) {
+func (t *tree) SetProperty(property api.Property) {
 
 }
 
-func (t *Tree) SetPropertyValue(name string, value interface{}) error {
+func (t *tree) SetPropertyValue(name string, value interface{}) error {
 	return nil
 }
 
-func (t *Tree) RemoveProperty(name string) {
+func (t *tree) RemoveProperty(name string) {
 
 }

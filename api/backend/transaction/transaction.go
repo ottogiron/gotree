@@ -1,8 +1,7 @@
 package transaction
 
 import (
-	"github.com/ottogiron/gotree/api/backend"
-	"github.com/ottogiron/gotree/backend/model"
+	"github.com/ottogiron/gotree/api/backend/model"
 )
 
 type Type int
@@ -13,7 +12,18 @@ const (
 	Update
 )
 
+type PersistHandler func(T) error
+
 type Manager interface {
 	Add(transactionType Type, tree *model.Tree)
-	Persist(backend backend.B) error
+	Persist(handler PersistHandler) error
+}
+
+type T struct {
+	transactionType Type
+	tree            *model.Tree
+}
+
+func NewTransaction(transactionType Type, tree *model.Tree) T {
+	return T{transactionType, tree}
 }

@@ -6,12 +6,15 @@ import (
 
 	"github.com/ottogiron/gotree"
 	"github.com/ottogiron/gotree/api"
-	"github.com/ottogiron/gotree/backend/model"
+	"github.com/ottogiron/gotree/api/backend/model"
+	"github.com/ottogiron/gotree/api/backend/transaction"
+	"github.com/ottogiron/gotree/backend"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type mongo struct {
+	transactionManager   transaction.Manager
 	session              *mgo.Session
 	connectionString     string
 	repositoryCollection string
@@ -20,7 +23,12 @@ type mongo struct {
 }
 
 func New(connStrings, repositoryDB, repositoryCollection string) *mongo {
-	return &mongo{connectionString: connStrings, repositoryDB: repositoryDB, repositoryCollection: repositoryCollection}
+	transactionManager := backend.NewTransactionManager()
+	return &mongo{
+		transactionManager:   transactionManager,
+		connectionString:     connStrings,
+		repositoryDB:         repositoryDB,
+		repositoryCollection: repositoryCollection}
 }
 
 func (m *mongo) Open() error {
@@ -34,7 +42,15 @@ func (m *mongo) Open() error {
 
 func (m *mongo) Close() error {
 
-	m.session.Close()
+	defer m.session.Close()
+	err := m.transactionManager.Persist(persistHandler)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func persistHandler(transaction.T) error {
 	return nil
 }
 
