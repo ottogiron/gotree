@@ -6,16 +6,16 @@ import (
 )
 
 type repository struct {
-	backend backend.B
+	kernel backend.Kernel
 }
 
-func NewRepository(backend backend.B) api.Repository {
-	return &repository{backend}
+func NewRepository(kernel backend.Kernel) api.Repository {
+	return &repository{kernel}
 }
 
 func (c *repository) Login() (api.Session, error) {
-	if err := c.backend.Open(); err != nil {
+	if err := c.kernel.Open(); err != nil {
 		return nil, err
 	}
-	return NewSession(c.backend), nil
+	return NewSession(c.kernel), nil
 }

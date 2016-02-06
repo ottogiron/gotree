@@ -6,7 +6,7 @@ import (
 )
 
 type SliceTransactionManager struct {
-	transactions []transaction.T
+	transactions []*transaction.T
 }
 
 func NewTransactionManager() transaction.Manager {
@@ -19,13 +19,11 @@ func (s *SliceTransactionManager) Add(transactionType transaction.Type, tree *mo
 }
 
 func (s *SliceTransactionManager) Persist(handler transaction.PersistHandler) error {
-
 	for _, t := range s.transactions {
 		err := handler(t)
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
