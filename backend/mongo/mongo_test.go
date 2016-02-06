@@ -10,19 +10,17 @@ import (
 
 func createSession(t *testing.T) (api.Session, error) {
 	hosts := os.Getenv("MONGO_TEST_HOSTS")
-	mongoBackend := New(hosts)
+	repositoryCollection := "monto_tree_test"
+	repositoryDB := "db_test"
+	mongoBackend := New(hosts, repositoryDB, repositoryCollection)
 
-	repository, err := gotree.CreateRepository(mongoBackend)
-
-	if err != nil || repository == nil {
-		t.Fatal("Error when creating repository")
-	}
+	repository := gotree.NewRepository(mongoBackend)
 
 	session, err := repository.Login()
 	return session, err
 }
 
-func TestGetTree(t *testing.T) {
+func TestGetRootTree(t *testing.T) {
 	t.Parallel()
 
 	session, err := createSession(t)
@@ -33,16 +31,18 @@ func TestGetTree(t *testing.T) {
 
 	defer session.Close()
 
-	root, err := session.Root()
-
-	if err != nil {
-		t.Fatal("Could not get the root of the repository")
-	}
+	root := session.Root()
 
 	rootTree, err := root.Tree("/")
 
-	if err != nil || rootTree == nil {
-		t.Fatal("Couldn't get the root tree")
+	if err != nil {
+		t.Fatalf("Couldn't get the root tree: %s", err)
+	}
+
+	exists := rootTree.Exists()
+
+	if exists {
+		t.Fatal("Tree should not exist")
 	}
 
 }

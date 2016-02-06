@@ -5,11 +5,11 @@ import "io"
 type PropertyType int
 
 const (
-	STRING = iota
-	BINARY
-	BOOL
-	DATE
-	FLOAT
+	str = iota
+	binary
+	boolean
+	date
+	float
 )
 
 type Repository interface {
@@ -18,13 +18,13 @@ type Repository interface {
 
 type Session interface {
 	io.Closer
-	Root() (Root, error)
+	Root() Root
 }
 
 type Root interface {
 	Move(sourcePath, destPath string) error
 	Tree(path string) (Tree, error)
-	Session() (Session, error)
+	Session() Session
 }
 
 type Tree interface {

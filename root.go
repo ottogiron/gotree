@@ -2,25 +2,26 @@ package gotree
 
 import (
 	"github.com/ottogiron/gotree/api"
-	"github.com/ottogiron/gotree/backend/model"
+	"github.com/ottogiron/gotree/api/backend"
 )
 
 type Root struct {
-	backend api.Backend
+	backend backend.B
+	session api.Session
+}
+
+func NewRoot(backend backend.B, session api.Session) api.Root {
+	return &Root{backend, session}
 }
 
 func (r *Root) Move(sourcePath, destPath string) error {
 	return nil
 }
 
-func (r *Root) Session() (api.Session, error) {
-	return nil, nil
+func (r *Root) Session() api.Session {
+	return r.session
 }
 
 func (r *Root) Tree(path string) (api.Tree, error) {
-	if path == "/" {
-		treeModel := &model.Tree{Name: "root", Path: "/"}
-		return &Tree{treeModel, r.backend}, nil
-	}
 	return r.backend.Tree(path)
 }

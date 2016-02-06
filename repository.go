@@ -1,18 +1,21 @@
 package gotree
 
-import "github.com/ottogiron/gotree/api"
+import (
+	"github.com/ottogiron/gotree/api"
+	"github.com/ottogiron/gotree/api/backend"
+)
 
-type Repository struct {
-	backend api.Backend
+type repository struct {
+	backend backend.B
 }
 
-func (c *Repository) Login() (api.Session, error) {
+func NewRepository(backend backend.B) api.Repository {
+	return &repository{backend}
+}
+
+func (c *repository) Login() (api.Session, error) {
 	if err := c.backend.Open(); err != nil {
 		return nil, err
 	}
-	return &Session{c.backend}, nil
-}
-
-func CreateRepository(backend api.Backend) (api.Repository, error) {
-	return &Repository{backend}, nil
+	return NewSession(c.backend), nil
 }

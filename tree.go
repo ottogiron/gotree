@@ -2,12 +2,17 @@ package gotree
 
 import (
 	"github.com/ottogiron/gotree/api"
+	"github.com/ottogiron/gotree/api/backend"
 	"github.com/ottogiron/gotree/backend/model"
 )
 
 type Tree struct {
 	*model.Tree
-	backend api.Backend
+	backend backend.B
+}
+
+func NewTree(model *model.Tree, backend backend.B) *Tree {
+	return &Tree{model, backend}
 }
 
 func (t *Tree) Name() string {
@@ -23,7 +28,7 @@ func (t *Tree) Path() string {
 }
 
 func (t *Tree) Exists() bool {
-	return true
+	return t.Tree.Exists
 }
 
 func (t *Tree) Parent() api.Tree {
