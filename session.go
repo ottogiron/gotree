@@ -6,17 +6,17 @@ import (
 )
 
 type Session struct {
-	backend backend.B
+	kernel backend.Kernel
 }
 
-func NewSession(backend backend.B) api.Session {
-	return &Session{backend}
+func NewSession(kernel backend.Kernel) api.Session {
+	return &Session{kernel}
 }
 
 func (s *Session) Close() error {
-	return s.backend.Close()
+	return s.kernel.Close()
 }
 
 func (s *Session) Root() api.Root {
-	return NewRoot(s.backend, s)
+	return NewRoot(s.kernel, s)
 }

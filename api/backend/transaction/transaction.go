@@ -12,7 +12,7 @@ const (
 	Update
 )
 
-type PersistHandler func(T) error
+type PersistHandler func(*T) error
 
 type Manager interface {
 	Add(transactionType Type, tree *model.Tree)
@@ -24,6 +24,6 @@ type T struct {
 	tree            *model.Tree
 }
 
-func NewTransaction(transactionType Type, tree *model.Tree) T {
-	return T{transactionType, tree}
+func NewTransaction(transactionType Type, tree *model.Tree) *T {
+	return &T{transactionType, tree}
 }

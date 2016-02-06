@@ -8,11 +8,11 @@ import (
 
 type tree struct {
 	*model.Tree
-	backend backend.B
+	kernel backend.Kernel
 }
 
-func NewTree(model *model.Tree, backend backend.B) api.Tree {
-	return &tree{model, backend}
+func NewTree(model *model.Tree, kernel backend.Kernel) api.Tree {
+	return &tree{model, kernel}
 }
 
 func (t *tree) Name() string {

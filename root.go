@@ -6,12 +6,12 @@ import (
 )
 
 type Root struct {
-	backend backend.B
+	kernel  backend.Kernel
 	session api.Session
 }
 
-func NewRoot(backend backend.B, session api.Session) api.Root {
-	return &Root{backend, session}
+func NewRoot(kernel backend.Kernel, session api.Session) api.Root {
+	return &Root{kernel, session}
 }
 
 func (r *Root) Move(sourcePath, destPath string) error {
@@ -23,5 +23,5 @@ func (r *Root) Session() api.Session {
 }
 
 func (r *Root) Tree(path string) (api.Tree, error) {
-	return r.backend.Tree(path)
+	return r.kernel.Tree(path)
 }

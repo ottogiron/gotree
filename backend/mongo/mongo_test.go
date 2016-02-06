@@ -6,6 +6,7 @@ import (
 
 	"github.com/ottogiron/gotree"
 	"github.com/ottogiron/gotree/api"
+	"github.com/ottogiron/gotree/backend"
 )
 
 func createSession(t *testing.T) (api.Session, error) {
@@ -13,8 +14,8 @@ func createSession(t *testing.T) (api.Session, error) {
 	repositoryCollection := "monto_tree_test"
 	repositoryDB := "db_test"
 	mongoBackend := New(hosts, repositoryDB, repositoryCollection)
-
-	repository := gotree.NewRepository(mongoBackend)
+	kernel := backend.NewKernel(mongoBackend)
+	repository := gotree.NewRepository(kernel)
 
 	session, err := repository.Login()
 	return session, err
