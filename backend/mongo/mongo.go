@@ -59,7 +59,6 @@ func (m *mongo) Tree(path string) (*model.Tree, error) {
 	if err != nil && path != "/" {
 		result.Exists = false
 	}
-
 	result.Exists = true
 	return result, nil
 }
@@ -76,6 +75,7 @@ func (m *mongo) Persist(t *transaction.T) error {
 	switch t.Type {
 	case transaction.Add:
 		if !model.Exists {
+			model.Exists = true
 			m.save(model)
 			return nil
 		}
