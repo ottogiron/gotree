@@ -51,19 +51,28 @@ func (m *mongo) Tree(path string) (*model.Tree, error) {
 		return nil, err
 	}
 
-	result := model.NewTree(path, true)
-
+	result := &model.Tree{}
 	err = c.Find(bson.M{"path": mongoPath}).One(result)
+
 	result.Path = path // fix path will be overriden to mongoPath
+
 	if err != nil && path != "/" {
 		result.Exists = false
 	}
 
+	result.Exists = true
 	return result, nil
 }
 
 func (m *mongo) Persist(t *transaction.T) error {
 	model := t.Model
+	path, err := mongoPath(model.Path)
+
+	if err != nil {
+		return err
+	}
+
+	model.Path = path
 	switch t.Type {
 	case transaction.Add:
 		if !model.Exists {

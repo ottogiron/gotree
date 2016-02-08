@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"errors"
 	"fmt"
 	"path"
 
@@ -14,6 +15,7 @@ import (
 type kernel struct {
 	transactionManager transaction.Manager
 	backend            backend.B
+	closed             bool
 }
 
 func NewKernel(backend backend.B) backend.Kernel {
@@ -22,6 +24,7 @@ func NewKernel(backend backend.B) backend.Kernel {
 	return &kernel{
 		transactionManager: transactionManager,
 		backend:            backend,
+		closed:             false,
 	}
 }
 
@@ -30,8 +33,17 @@ func (k *kernel) Open() error {
 }
 
 func (k *kernel) Close() error {
-	k.transactionManager.Persist(k.persistHandler())
-	return k.backend.Close()
+
+	if !k.closed {
+		k.transactionManager.Persist(k.persistHandler())
+		if err := k.backend.Close(); err != nil {
+			return fmt.Errorf("Error when trying to close session %s", err)
+		}
+		k.closed = true
+		return nil
+	}
+
+	return errors.New("Error when trying to close session: already closed")
 }
 
 func (k *kernel) Tree(path string) (api.Tree, error) {

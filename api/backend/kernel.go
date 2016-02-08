@@ -11,5 +11,5 @@ type Kernel interface {
 	Open() error
 	Tree(path string) (api.Tree, error)
 	Move(sourcePath, destPath string) error
-	AddChild(parentPath, childPath string) (api.Tree, error)
+	AddChild(parentPath, name string) (api.Tree, error)
 }
