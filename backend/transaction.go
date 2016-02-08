@@ -18,6 +18,16 @@ func (s *SliceTransactionManager) Add(transactionType transaction.Type, tree *mo
 	s.transactions = append(s.transactions, t)
 }
 
+func (s *SliceTransactionManager) AddTransactionExist(path string) bool {
+
+	for transactionType, t := range s.transactions {
+		if transactionType == transaction.Add && t.Model.Path == path {
+			return true
+		}
+	}
+	return false
+}
+
 func (s *SliceTransactionManager) Persist(handler transaction.PersistHandler) error {
 	for _, t := range s.transactions {
 		err := handler(t)

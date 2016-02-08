@@ -6,3 +6,7 @@ type Tree struct {
 	Properties map[string]interface{}
 	Exists     bool
 }
+
+func NewTree(path string) *Tree {
+	return &Tree{}
+}

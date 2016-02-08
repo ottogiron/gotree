@@ -50,7 +50,9 @@ func (m *mongo) Tree(path string) (*model.Tree, error) {
 	if err != nil {
 		return nil, err
 	}
-	result := &model.Tree{}
+
+	result := model.NewTree(path)
+	result.Exists = true
 	err = c.Find(bson.M{"path": path}).One(result)
 
 	if err != nil {

@@ -47,3 +47,29 @@ func TestGetRootTree(t *testing.T) {
 	}
 
 }
+
+func TestAddChild(t *testing.T) {
+	t.Parallel()
+
+	session, _ := createSession(t)
+
+	defer session.Close()
+
+	root := session.Root()
+	rootTree, err := root.Tree("/")
+
+	if err != nil {
+		t.Fatalf("Couldn't get the root tree: %s", err)
+	}
+
+	testChild := rootTree.AddChild("testChild")
+
+	if testChild == nil {
+		t.Fatal("Test chils shoud not be nil")
+	}
+
+	if testChild.Path() != "/testChild" {
+		t.Fatal("Test path should be /testChild")
+	}
+
+}
