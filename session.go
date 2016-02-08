@@ -5,18 +5,18 @@ import (
 	"github.com/ottogiron/gotree/api/backend"
 )
 
-type Session struct {
+type session struct {
 	kernel backend.Kernel
 }
 
 func NewSession(kernel backend.Kernel) api.Session {
-	return &Session{kernel}
+	return &session{kernel}
 }
 
-func (s *Session) Close() error {
+func (s *session) Close() error {
 	return s.kernel.Close()
 }
 
-func (s *Session) Root() api.Root {
+func (s *session) Root() api.Root {
 	return NewRoot(s.kernel, s)
 }

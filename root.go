@@ -5,23 +5,23 @@ import (
 	"github.com/ottogiron/gotree/api/backend"
 )
 
-type Root struct {
+type root struct {
 	kernel  backend.Kernel
 	session api.Session
 }
 
 func NewRoot(kernel backend.Kernel, session api.Session) api.Root {
-	return &Root{kernel, session}
+	return &root{kernel, session}
 }
 
-func (r *Root) Move(sourcePath, destPath string) error {
+func (r *root) Move(sourcePath, destPath string) error {
 	return nil
 }
 
-func (r *Root) Session() api.Session {
+func (r *root) Session() api.Session {
 	return r.session
 }
 
-func (r *Root) Tree(path string) (api.Tree, error) {
+func (r *root) Tree(path string) (api.Tree, error) {
 	return r.kernel.Tree(path)
 }
