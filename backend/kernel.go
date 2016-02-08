@@ -2,6 +2,7 @@ package backend
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/ottogiron/gotree"
 	"github.com/ottogiron/gotree/api"
@@ -33,7 +34,17 @@ func (k *kernel) Close() error {
 	return k.backend.Close()
 }
 
-func (k *kernel) AddChild(parentPath, childPath string) (api.Tree, error) {
+func (k *kernel) Tree(path string) (api.Tree, error) {
+	treeModel, err := k.backend.Tree(path)
+
+	if err != nil {
+		return nil, err
+	}
+	tree := gotree.NewTree(treeModel, k)
+	return tree, nil
+}
+
+func (k *kernel) AddChild(parentPath, name string) (api.Tree, error) {
 
 	parentWillExists := k.transactionManager.EnsureTreeWillExists(parentPath)
 	if !parentWillExists {
@@ -42,6 +53,7 @@ func (k *kernel) AddChild(parentPath, childPath string) (api.Tree, error) {
 			return nil, fmt.Errorf("Parent %s does not exis, please create the parent tree first", parentPath)
 		}
 	}
+	childPath := path.Join(parentPath, name)
 	childModel := model.NewTree(childPath, false)
 	k.transactionManager.Add(transaction.Add, childModel)
 	tree := gotree.NewTree(childModel, k)
@@ -59,15 +71,4 @@ func (k *kernel) persistHandler() transaction.PersistHandler {
 
 func (k *kernel) Move(sourcePath, destPath string) error {
 	return nil
-}
-
-func (k *kernel) Tree(path string) (api.Tree, error) {
-	treeModel, err := k.backend.Tree(path)
-
-	if err != nil {
-		treeModel = &model.Tree{Exists: false}
-	}
-
-	tree := gotree.NewTree(treeModel, k)
-	return tree, nil
 }

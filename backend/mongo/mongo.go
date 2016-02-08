@@ -46,16 +46,16 @@ func (m *mongo) Move(sourcePath, destPath string) error {
 
 func (m *mongo) Tree(path string) (*model.Tree, error) {
 	c := m.collection()
-	path, err := mongoPath(path)
+	mongoPath, err := mongoPath(path)
 	if err != nil {
 		return nil, err
 	}
 
 	result := model.NewTree(path, true)
 
-	err = c.Find(bson.M{"path": path}).One(result)
-
-	if err != nil {
+	err = c.Find(bson.M{"path": mongoPath}).One(result)
+	result.Path = path // fix path will be overriden to mongoPath
+	if err != nil && path != "/" {
 		result.Exists = false
 	}
 

@@ -71,8 +71,8 @@ func (t *tree) Remove() error {
 	return nil
 }
 
-func (t *tree) AddChild(name string) api.Tree {
-	return nil
+func (t *tree) AddChild(name string) (api.Tree, error) {
+	return t.kernel.AddChild(t.Path(), name)
 }
 
 func (t *tree) SetOrderableChildren(enable bool) {

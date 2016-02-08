@@ -42,7 +42,7 @@ type Tree interface {
 	ChildrenCount() int
 	Children() []Tree
 	Remove() error
-	AddChild(name string) Tree
+	AddChild(name string) (Tree, error)
 	SetOrderableChildren(enable bool)
 	SetProperty(property Property)
 	SetPropertyValue(name string, value interface{}) error

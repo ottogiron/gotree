@@ -42,8 +42,8 @@ func TestGetRootTree(t *testing.T) {
 
 	exists := rootTree.Exists()
 
-	if exists {
-		t.Fatal("Tree should not exist")
+	if !exists {
+		t.Fatal("Tree should exists")
 	}
 
 }
@@ -62,14 +62,22 @@ func TestAddChild(t *testing.T) {
 		t.Fatalf("Couldn't get the root tree: %s", err)
 	}
 
-	testChild := rootTree.AddChild("testChild")
+	if rootTree.Path() != "/" {
+		t.Fatalf("Root tree path should be %s", rootTree.Path())
+	}
 
-	if testChild == nil {
-		t.Fatal("Test chils shoud not be nil")
+	if !rootTree.Exists() {
+		t.Fatal("Root tree / should exists")
+	}
+
+	testChild, err := rootTree.AddChild("testChild")
+
+	if err != nil {
+		t.Fatalf("Test chils shoud not be nil: %s", err)
 	}
 
 	if testChild.Path() != "/testChild" {
-		t.Fatal("Test path should be /testChild")
+		t.Fatalf("Test path should be /testChild and it is: %s", testChild.Path())
 	}
 
 }
