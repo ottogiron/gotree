@@ -7,6 +7,6 @@ type Tree struct {
 	Exists     bool
 }
 
-func NewTree(path string) *Tree {
-	return &Tree{}
+func NewTree(path string, exists bool) *Tree {
+	return &Tree{Path: path, Exists: exists}
 }

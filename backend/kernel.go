@@ -35,15 +35,14 @@ func (k *kernel) Close() error {
 
 func (k *kernel) AddChild(parentPath, childPath string) (api.Tree, error) {
 
-	addTransactionExists := k.transactionManager.AddTransactionExist(parentPath)
-	if !addTransactionExists {
-		_, err := k.backend.Tree(parentPath)
-		if err != nil {
+	parentWillExists := k.transactionManager.EnsureTreeWillExists(parentPath)
+	if !parentWillExists {
+		parentModel, err := k.backend.Tree(parentPath)
+		if !parentModel.Exists || err != nil {
 			return nil, fmt.Errorf("Parent %s does not exis, please create the parent tree first", parentPath)
 		}
-
 	}
-	childModel := model.NewTree(childPath)
+	childModel := model.NewTree(childPath, false)
 	k.transactionManager.Add(transaction.Add, childModel)
 	tree := gotree.NewTree(childModel, k)
 	return tree, nil

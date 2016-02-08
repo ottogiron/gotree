@@ -46,24 +46,50 @@ func (m *mongo) Move(sourcePath, destPath string) error {
 
 func (m *mongo) Tree(path string) (*model.Tree, error) {
 	c := m.collection()
-	path, err := transformTomongoPath(path)
+	path, err := mongoPath(path)
 	if err != nil {
 		return nil, err
 	}
 
-	result := model.NewTree(path)
-	result.Exists = true
+	result := model.NewTree(path, true)
+
 	err = c.Find(bson.M{"path": path}).One(result)
 
 	if err != nil {
-		return nil, err
+		result.Exists = false
 	}
 
 	return result, nil
 }
 
-func (m *mongo) Persist(transaction *transaction.T) error {
+func (m *mongo) Persist(t *transaction.T) error {
+	model := t.Model
+	switch t.Type {
+	case transaction.Add:
+		if !model.Exists {
+			m.save(model)
+			return nil
+		}
+	case transaction.Update:
+		if !model.Exists {
+			m.save(model)
+			return nil
+		}
+		mPath, err := mongoPath(model.Path)
+		if err != nil {
+			return err
+		}
+		m.collection().Update(bson.M{"path": mPath}, model)
+
+	case transaction.Remove:
+		//Expensive operation to remove many children
+	}
 	return nil
+}
+
+func (m *mongo) save(treeModel *model.Tree) error {
+	err := m.collection().Insert(treeModel)
+	return err
 }
 
 func (m *mongo) collection() *mgo.Collection {
@@ -71,7 +97,7 @@ func (m *mongo) collection() *mgo.Collection {
 	return collection
 }
 
-func transformTomongoPath(path string) (string, error) {
+func mongoPath(path string) (string, error) {
 	if !isValidPath(path) {
 		return "", fmt.Errorf("Invalid path %s", path)
 	}
